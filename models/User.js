@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 
 const userSchema = new Schema(
   {
@@ -12,19 +12,18 @@ const userSchema = new Schema(
       type: String,
       required: 'Email address is required',
       unique: true,
-      validate: [validateEmail, 'Please fill a valid email address'],
-      match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+      match: [/^([A-Za-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/],
     },
     thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Thoughts',
+        ref: 'thought',
       },
     ],
     friends: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Users',
+        ref: 'user',
       },
     ],
   },
@@ -40,5 +39,5 @@ const userSchema = new Schema(
 userSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
-const users = model('users', userSchema);
+const users = model('user', userSchema);
 module.exports = users;
